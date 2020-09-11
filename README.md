@@ -1,2 +1,3 @@
-# tvattapp
-Boka tvättit på nätet. 
+# Tvätt App
+Boka tvättit på nätet.
+Kommunicera tillgänglighet.
