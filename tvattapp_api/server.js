@@ -1,33 +1,23 @@
 const express = require('express');
 const dotenv = require('dotenv');
 
-//Load ENV
+// Route files 
+const anvandare = require('./routes/anvandare');
+const forvaltare = require('./routes/forvaltare');
+const fastighet = require('./routes/fastighet');
+const tvattstuga = require('./routes/tvattstuga');
 
+//Load ENV
 dotenv.config({path: './config/config.env'});
 
+//Initialte express
 const app = express();
 
-//ROUTES
-app.get('/api/v1/forvaltare', (req, res) => {
-    res.status(200).json({success: true, msg: 'Visa alla fastighetsförvaltare'});
-});
+//Mounting routes
+app.use('/api/v1/forvaltare', forvaltare)
 
-app.get('/api/v1/forvaltare/:id', (req, res) => {
-    res.status(200).json({success: true, msg: `Visa fastighetsförvaltare ${req.params.id}`});
-});
-
-app.post('/api/v1/forvaltare', (req, res) => {
-    res.status(200).json({success: true, msg: 'Läg till en ny fastighetsförvaltare'});
-});
-
-app.put('/api/v1/forvaltare/:id', (req, res) => {
-    res.status(200).json({success: true, msg: `Uppdatera fastighetsförvaltare ${req.params.id}`});
-});
-
-app.delete('/api/v1/forvaltare/:id', (req, res) => {
-    res.status(200).json({success: true, msg: `Ta bort fastighetsförvaltare ${req.params.id}`});
-});
-
+//Assign port - conditional on dev or prod
 const PORT = process.env.PORT || 5000;
 
+// Initialize server
 app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`));
