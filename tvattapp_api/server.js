@@ -2,10 +2,10 @@ const express = require('express');
 const dotenv = require('dotenv');
 
 // Route files 
-const anvandare = require('./routes/anvandare');
+// const anvandare = require('./routes/anvandare');
+// const fastighet = require('./routes/fastighet');
 const forvaltare = require('./routes/forvaltare');
-const fastighet = require('./routes/fastighet');
-const tvattstuga = require('./routes/tvattstuga');
+// const tvattstuga = require('./routes/tvattstuga');
 
 //Load ENV
 dotenv.config({path: './config/config.env'});
