@@ -14,7 +14,6 @@ const ForvaltareSchema = new mongoose.Schema({
 	logo: {
 		type: String,
 		default: 'no logo.jpg',
-		required: false,
 	},
 	website: {
 		type: String,
@@ -22,8 +21,8 @@ const ForvaltareSchema = new mongoose.Schema({
 			/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
 			'Använd en befintlig websida / URL med HTTP eller HTTPS',
 		],
+		unique: [true, 'Webadressen finns redan'],
 		trim: true,
-		required: false,
 	},
 	createdAt: {
 		type: Date,

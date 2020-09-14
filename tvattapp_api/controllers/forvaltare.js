@@ -1,5 +1,9 @@
 const Forvaltare = require('../models/Forvaltare');
 
+// BESKRIVNING:     Hämtar fastighetsförvaltare
+// ROUTE:           GET /api/v1/forvaltare/
+// TILLGÅNG:        `Visa alla fastighetsförvaltare'
+
 exports.getForvaltare = async (
 	req,
 	res,
