@@ -19,12 +19,17 @@ const forvaltare = require('./routes/forvaltare');
 //Initialte express
 const app = express();
 
+//Body parser
+app.use(express.json());
+
 //Middleware logging - using Morgan
 if (process.env.NODE_ENV === 'development') {
 	app.use(morgan('dev'));
 }
 
 //Mounting routes
+
+// Förvaltare
 app.use('/api/v1/forvaltare', forvaltare);
 
 //Assign port - conditional on dev or prod
