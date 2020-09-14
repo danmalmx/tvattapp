@@ -12,6 +12,7 @@ const connectDB = async () => {
 	);
 	console.log(
 		`Mongo DB connected: ${conct.connection.host}`
+			.cyan.underline.bold
 	);
 };
 
