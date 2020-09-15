@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const colors = require('colors');
+
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 
@@ -13,7 +14,7 @@ connectDB();
 
 // Route files
 // const anvandare = require('./routes/anvandare');
-// const fastighet = require('./routes/fastighet');
+// const fastigheter = require('./routes/fastigheter');
 const forvaltare = require('./routes/forvaltare');
 // const tvattstuga = require('./routes/tvattstuga');
 
@@ -28,10 +29,11 @@ if (process.env.NODE_ENV === 'development') {
 	app.use(morgan('dev'));
 }
 
-//Mounting routes
+// USING ROUTERS
 
 // Förvaltare
 app.use('/api/v1/forvaltare', forvaltare);
+// app.use('/api/v1/fastigheter', fastigheter);
 
 //Infuse error handling middlewarr
 app.use(errorHandler);
@@ -49,11 +51,8 @@ const server = app.listen(
 );
 
 //Rejection handling
-process.on(
-	'unhandledRejection',
-	(err, promise) => {
-		console.log(`Error: ${err}`.red);
-		//Close server
-		server.close(() => process.exit(1));
-	}
-);
+process.on('unhandledRejection', (err, promise) => {
+	console.log(`Error: ${err}`.red);
+	//Close server
+	server.close(() => process.exit(1));
+});

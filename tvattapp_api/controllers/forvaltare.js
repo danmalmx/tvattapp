@@ -5,11 +5,7 @@ const Forvaltare = require('../models/Forvaltare');
 // ROUTE:           GET /api/v1/forvaltare/
 // TILLGÅNG:        `Visa alla fastighetsförvaltare'
 
-exports.getForvaltare = async (
-	req,
-	res,
-	next
-) => {
+exports.getForvaltare = async (req, res, next) => {
 	try {
 		const forvaltare = await Forvaltare.find();
 
@@ -18,10 +14,7 @@ exports.getForvaltare = async (
 			data: forvaltare,
 		});
 	} catch (error) {
-		res.status(400).json({
-			success: false,
-			error: error,
-		});
+		next(error);
 	}
 };
 
@@ -29,11 +22,7 @@ exports.getForvaltare = async (
 // ROUTE:           GET /api/v1/forvaltare/:id
 // TILLGÅNG:        `Visa fastighetsförvaltare ${req.params.id}`
 
-exports.getEnForvaltare = async (
-	req,
-	res,
-	next
-) => {
+exports.getEnForvaltare = async (req, res, next) => {
 	try {
 		const forvaltare = await Forvaltare.findById(
 			req.params.id
@@ -53,12 +42,7 @@ exports.getEnForvaltare = async (
 			data: forvaltare,
 		});
 	} catch (error) {
-		next(
-			new ErrorResponse(
-				`Hittade ingen förvaltare med id ${req.params.id}`,
-				404
-			)
-		);
+		next(error);
 	}
 };
 
@@ -66,36 +50,23 @@ exports.getEnForvaltare = async (
 // ROUTE:           POST /api/v1/forvaltare
 // TILLGÅNG:        Begränsad (måste vara inloggad SYSTEM_ADMIN)
 
-exports.createForvaltare = async (
-	req,
-	res,
-	next
-) => {
+exports.createForvaltare = async (req, res, next) => {
 	try {
-		const forvaltare = await Forvaltare.create(
-			req.body
-		);
+		const forvaltare = await Forvaltare.create(req.body);
 
 		res.status(201).json({
 			success: true,
 			data: forvaltare,
 		});
 	} catch (error) {
-		res.status(400).json({
-			success: false,
-			error: error,
-		});
+		next(error);
 	}
 };
 // BESKRIVNING:     Uppdatera en fastighetsförvaltare
 // ROUTE:           PUT /api/v1/forvaltare/:id
 // TILLGÅNG:        Begränsad (måste vara inloggad SYSTEM_ADMIN)
 
-exports.updateForvaltare = async (
-	req,
-	res,
-	next
-) => {
+exports.updateForvaltare = async (req, res, next) => {
 	try {
 		const forvaltare = await Forvaltare.findByIdAndUpdate(
 			req.params.id,
@@ -106,9 +77,12 @@ exports.updateForvaltare = async (
 			}
 		);
 		if (!forvaltare) {
-			return res.status(400).json({
-				success: false,
-			});
+			return next(
+				new ErrorResponse(
+					`Hittade ingen förvaltare med id ${req.params.id}`,
+					404
+				)
+			);
 		}
 
 		res.status(200).json({
@@ -116,10 +90,7 @@ exports.updateForvaltare = async (
 			data: forvaltare,
 		});
 	} catch (error) {
-		res.status(400).json({
-			success: false,
-			error: error,
-		});
+		next(error);
 	}
 };
 
@@ -127,28 +98,24 @@ exports.updateForvaltare = async (
 // ROUTE:           DELETE /api/v1/forvaltare/:id
 // TILLGÅNG:        Begränsad (måste vara inloggad SYSTEM_ADMIN)
 
-exports.deleteForvaltare = async (
-	req,
-	res,
-	next
-) => {
+exports.deleteForvaltare = async (req, res, next) => {
 	try {
 		const forvaltare = await Forvaltare.findByIdAndDelete(
 			req.params.id
 		);
 		if (!forvaltare) {
-			res.status(400).json({
-				success: fasle,
-			});
+			return next(
+				new ErrorResponse(
+					`Hittade ingen förvaltare med id ${req.params.id}`,
+					404
+				)
+			);
 		}
 		res.status(200).json({
 			success: true,
 			data: {},
 		});
 	} catch (error) {
-		res.status(400).json({
-			success: false,
-			errror: error,
-		});
+		next(error);
 	}
 };

@@ -4,24 +4,23 @@ const ForvaltareSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: [true, 'Namn är obligatoriskt'],
-		maxlength: [
-			50,
-			'Namnet kan inte överstiga 50 tecken',
-		],
+		maxlength: [50, 'Namnet kan inte överstiga 50 tecken'],
 		trim: true,
-		unique: [true, 'Namnet finns redan'],
+		unique: true,
 	},
 	logo: {
 		type: String,
-		default: 'no_logo.jpg',
+		required: [true, 'Logotyp är obligatorisk'],
+		unique: true,
 	},
 	website: {
 		type: String,
+		required: [true, 'Websida är obligatorisk'],
 		match: [
 			/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
 			'Använd en befintlig websida / URL med HTTP eller HTTPS',
 		],
-		unique: [true, 'Webadressen finns redan'],
+		unique: true,
 		trim: true,
 	},
 	createdAt: {
