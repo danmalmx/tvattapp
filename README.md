@@ -3,7 +3,7 @@
 ### Kommunicera tillgänglighet.
 
 ## Stack
-#### Node | Express | MongoDB | React
+#### MongoDB | Express | React | Node
 
 ## Environment
 #### Node
