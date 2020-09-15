@@ -3,12 +3,7 @@
 ### Kommunicera tillgänglighet.
 
 ## Stack
-#### Node 
-#### Express
-#### MongoDB
-#### Mongoose
-#### React
-
+#### Node | Express | MongoDB |React
 
 ## Environment
 #### Node
@@ -17,6 +12,7 @@
     - Morgan (server logger)
     - Slugify (to get a user-friendly url slug)
     - Colors (for console output)
+    - Mongoose (ORM for mongoDB)
 #### VSCode
     - Auto Rename Tag
     - Bracket Pair Colorizer
