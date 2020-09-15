@@ -13,8 +13,10 @@
 ## Environment
 #### Node
 #### NPM
-    - Nodemon
-    - 
+    - Nodemon (auto-refresh server uppon save)
+    - Morgan (server logger)
+    - Slugify (to get a user-friendly url slug)
+    - Colors (for console output)
 #### VSCode
     - Auto Rename Tag
     - Bracket Pair Colorizer
