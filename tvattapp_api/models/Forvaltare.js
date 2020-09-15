@@ -13,7 +13,7 @@ const ForvaltareSchema = new mongoose.Schema({
 	},
 	logo: {
 		type: String,
-		default: 'no logo.jpg',
+		default: 'no_logo.jpg',
 	},
 	website: {
 		type: String,

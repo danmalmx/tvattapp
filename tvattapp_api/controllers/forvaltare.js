@@ -49,10 +49,11 @@ exports.getEnForvaltare = async (
 			data: forvaltare,
 		});
 	} catch (error) {
-		res.status(400).json({
-			success: false,
-			error: error,
-		});
+		next(error);
+		// res.status(400).json({
+		// 	success: false,
+		// 	error: error,
+		// });
 	}
 };
 
