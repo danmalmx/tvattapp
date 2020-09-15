@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const ForvaltareSchema = new mongoose.Schema({
 	name: {
@@ -8,6 +9,7 @@ const ForvaltareSchema = new mongoose.Schema({
 		trim: true,
 		unique: true,
 	},
+	slug: String,
 	logo: {
 		type: String,
 		required: [true, 'Logotyp är obligatorisk'],
@@ -27,6 +29,15 @@ const ForvaltareSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now,
 	},
+});
+
+//Create slug for Förvaltare
+ForvaltareSchema.pre('save', function (next) {
+	this.slug = slugify(this.name, {
+		lower: true,
+		replacement: '_',
+	});
+	next();
 });
 
 module.exports = mongoose.model(
