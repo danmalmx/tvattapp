@@ -1,3 +1,4 @@
+const ErrorResponse = require('../utilities/errorResponse');
 const Forvaltare = require('../models/Forvaltare');
 
 // BESKRIVNING:     Hämtar fastighetsförvaltare
@@ -39,9 +40,12 @@ exports.getEnForvaltare = async (
 		);
 
 		if (!forvaltare) {
-			return res.status(400).json({
-				success: false,
-			});
+			return next(
+				new ErrorResponse(
+					`Hittade ingen förvaltare med id ${req.params.id}`,
+					404
+				)
+			);
 		}
 
 		res.status(200).json({
@@ -49,11 +53,12 @@ exports.getEnForvaltare = async (
 			data: forvaltare,
 		});
 	} catch (error) {
-		next(error);
-		// res.status(400).json({
-		// 	success: false,
-		// 	error: error,
-		// });
+		next(
+			new ErrorResponse(
+				`Hittade ingen förvaltare med id ${req.params.id}`,
+				404
+			)
+		);
 	}
 };
 
