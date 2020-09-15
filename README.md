@@ -6,7 +6,6 @@
 #### MongoDB | Express | React | Node
 
 ## Environment
-#### Node
 #### NPM
     - Nodemon (auto-refresh server uppon save)
     - Morgan (server logger)
