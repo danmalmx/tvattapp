@@ -2,6 +2,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const colors = require('colors');
+
+const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 
 //Load ENV
@@ -12,7 +14,7 @@ connectDB();
 
 // Route files
 // const anvandare = require('./routes/anvandare');
-// const fastighet = require('./routes/fastighet');
+const foreningar = require('./routes/foreningar');
 const forvaltare = require('./routes/forvaltare');
 // const tvattstuga = require('./routes/tvattstuga');
 
@@ -27,10 +29,14 @@ if (process.env.NODE_ENV === 'development') {
 	app.use(morgan('dev'));
 }
 
-//Mounting routes
+// USING ROUTERS
 
 // Förvaltare
 app.use('/api/v1/forvaltare', forvaltare);
+app.use('/api/v1/foreningar', foreningar);
+
+//Infuse error handling middlewarr
+app.use(errorHandler);
 
 //Assign port - conditional on dev or prod
 const PORT = process.env.PORT || 5000;
@@ -45,11 +51,8 @@ const server = app.listen(
 );
 
 //Rejection handling
-process.on(
-	'unhandledRejection',
-	(err, promise) => {
-		console.log(`Error: ${err}`.red);
-		//Close server
-		server.close(() => process.exit(1));
-	}
-);
+process.on('unhandledRejection', (err, promise) => {
+	console.log(`Error: ${err}`.red);
+	//Close server
+	server.close(() => process.exit(1));
+});
