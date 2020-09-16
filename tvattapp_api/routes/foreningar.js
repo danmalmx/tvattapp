@@ -7,6 +7,8 @@ const {
 	getForeningar,
 	getForening,
 	createForeningar,
+	updateForeningar,
+	deleteForeningar,
 	getForeningInRadius,
 } = require('../controllers/foreningar');
 
@@ -17,6 +19,10 @@ router
 
 router.route('/').get(getForeningar).post(createForeningar);
 
-router.route('/:id').get(getForening);
+router
+	.route('/:id')
+	.get(getForening)
+	.put(updateForeningar)
+	.delete(deleteForeningar);
 
 module.exports = router;

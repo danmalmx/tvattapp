@@ -74,7 +74,7 @@ exports.createForeningar = asyncHandler(
 		if (!forvaltare) {
 			return next(
 				new ErrorResponse(
-					`Hitar ingen förvaltare med id ${req.params.forvaltareId}`,
+					`Hittar ingen förvaltare med id ${req.params.forvaltareId}`,
 					404
 				)
 			);
@@ -85,6 +85,69 @@ exports.createForeningar = asyncHandler(
 		res.status(200).json({
 			success: true,
 			data: foreningar,
+		});
+	}
+);
+
+// BESKRIVNING:     Uppdatera en förening
+// ROUTE:           PUT /api/v1/foreningar/:id
+// TILLGÅNG:        Begränsad (måste vara inloggad SYSTEM_ADMIN eller ADMIN)
+
+exports.updateForeningar = asyncHandler(
+	async (req, res, next) => {
+		let foreningar = await Foreningar.findById(
+			req.params.id
+		);
+
+		if (!foreningar) {
+			return next(
+				new ErrorResponse(
+					`Hittar ingen förening med id ${req.params.id}`,
+					404
+				)
+			);
+		}
+
+		foreningar = await Foreningar.findByIdAndUpdate(
+			req.params.id,
+			req.body,
+			{
+				new: true,
+				runValidators: true,
+			}
+		);
+
+		res.status(200).json({
+			success: true,
+			data: foreningar,
+		});
+	}
+);
+
+// BESKRIVNING:     Ta bort en förening
+// ROUTE:           DELETE /api/v1/foreningar/:id
+// TILLGÅNG:        Begränsad (måste vara inloggad SYSTEM_ADMIN eller ADMIN)
+
+exports.deleteForeningar = asyncHandler(
+	async (req, res, next) => {
+		const foreningar = await Foreningar.findById(
+			req.params.id
+		);
+
+		if (!foreningar) {
+			return next(
+				new ErrorResponse(
+					`Hittar ingen förening med id ${req.params.id}`,
+					404
+				)
+			);
+		}
+
+		await foreningar.remove();
+
+		res.status(200).json({
+			success: true,
+			data: {},
 		});
 	}
 );
