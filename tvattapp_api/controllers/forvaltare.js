@@ -195,7 +195,5 @@ exports.forvaltareLogoUpload = asyncHandler(
 				});
 			}
 		);
-
-		console.log(file.name);
 	}
 );
