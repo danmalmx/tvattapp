@@ -14,7 +14,7 @@ connectDB();
 
 // Route files
 // const anvandare = require('./routes/anvandare');
-// const fastigheter = require('./routes/fastigheter');
+const foreningar = require('./routes/foreningar');
 const forvaltare = require('./routes/forvaltare');
 // const tvattstuga = require('./routes/tvattstuga');
 
@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Förvaltare
 app.use('/api/v1/forvaltare', forvaltare);
-// app.use('/api/v1/fastigheter', fastigheter);
+app.use('/api/v1/foreningar', foreningar);
 
 //Infuse error handling middlewarr
 app.use(errorHandler);
