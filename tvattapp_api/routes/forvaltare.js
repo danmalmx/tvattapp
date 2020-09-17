@@ -8,6 +8,7 @@ const {
 	createForvaltare,
 	updateForvaltare,
 	deleteForvaltare,
+	forvaltareLogoUpload,
 } = require('../controllers/forvaltare');
 
 //Include other resource routers
@@ -25,5 +26,7 @@ router
 	.get(getEnForvaltare)
 	.put(updateForvaltare)
 	.delete(deleteForvaltare);
+
+router.route('/:id/photo').put(forvaltareLogoUpload);
 
 module.exports = router;

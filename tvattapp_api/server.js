@@ -1,7 +1,9 @@
+const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const colors = require('colors');
+const fileupload = require('express-fileupload');
 
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
@@ -13,9 +15,9 @@ dotenv.config({ path: './config/config.env' });
 connectDB();
 
 // Route files
-// const anvandare = require('./routes/anvandare');
 const foreningar = require('./routes/foreningar');
 const forvaltare = require('./routes/forvaltare');
+const auth = require('./routes/auth');
 // const tvattstuga = require('./routes/tvattstuga');
 
 //Initialte express
@@ -29,11 +31,21 @@ if (process.env.NODE_ENV === 'development') {
 	app.use(morgan('dev'));
 }
 
-// USING ROUTERS
+//File uploader
+
+app.use(fileupload());
+
+// Set static (logotype) folder
+app.use(express.static(path.join(__dirname, 'public')));
+
+// USING ROUTES
 
 // Förvaltare
 app.use('/api/v1/forvaltare', forvaltare);
+// Föreningar
 app.use('/api/v1/foreningar', foreningar);
+// Registrera användare
+app.use('/api/v1/auth', auth);
 
 //Infuse error handling middlewarr
 app.use(errorHandler);
