@@ -90,6 +90,13 @@ AnvandareSchema.methods.getJWTToken = function () {
 	);
 };
 
+//Match users password to hashed password
+AnvandareSchema.methods.matchPassword = async function (
+	userPassword
+) {
+	return await bcrypt.compare(userPassword, this.password);
+};
+
 module.exports = mongoose.model(
 	'Anvandare',
 	AnvandareSchema
