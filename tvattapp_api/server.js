@@ -38,7 +38,7 @@ app.use(fileupload());
 // Set static (logotype) folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// USING ROUTERS
+// USING ROUTES
 
 // Förvaltare
 app.use('/api/v1/forvaltare', forvaltare);

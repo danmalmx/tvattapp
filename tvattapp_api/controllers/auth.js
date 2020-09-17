@@ -8,8 +8,28 @@ const Anvandare = require('../models/Anvandare');
 
 exports.registrera = asyncHandler(
 	async (req, res, next) => {
-		res.status(200).json({
-			success: true,
+		const {
+			firstName,
+			lastName,
+			// userName,
+			email,
+			role,
+			password,
+		} = req.body;
+
+		//Create User
+		const anvandare = await Anvandare.create({
+			firstName,
+			lastName,
+			// userName,
+			email,
+			role,
+			password,
 		});
+
+		//Create JWT
+		const token = anvandare.getJWTToken();
+
+		res.status(200).json({ success: true, token });
 	}
 );

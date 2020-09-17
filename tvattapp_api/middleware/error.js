@@ -28,6 +28,8 @@ const errorHandler = (err, req, res, next) => {
 				? `namnet: ${err.keyValue.name}`
 				: err.keyValue.website
 				? `websidan: ${err.keyValue.website}`
+				: err.keyValue.email
+				? `emailen: ${err.keyValue.email}`
 				: ''
 		}`;
 		error = new ErrorResponse(message, 400);

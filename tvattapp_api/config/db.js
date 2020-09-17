@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
 	const conct = await mongoose.connect(
-		process.env.MONGO_URI,
+		process.env.MONGO_DB,
 		{
 			useNewUrlParser: true,
 			useCreateIndex: true,
@@ -11,8 +11,8 @@ const connectDB = async () => {
 		}
 	);
 	console.log(
-		`Mongo DB connected: ${conct.connection.host}`
-			.cyan.underline.bold
+		`Mongo DB connected: ${conct.connection.host}`.cyan
+			.underline.bold
 	);
 };
 
