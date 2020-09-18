@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const colors = require('colors');
 const fileupload = require('express-fileupload');
+const cookieParser = require('cookie-parser');
 
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
@@ -26,20 +27,21 @@ const app = express();
 //Body parser
 app.use(express.json());
 
+//Cookie parser
+app.use(cookieParser());
+
 //Middleware logging - using Morgan
 if (process.env.NODE_ENV === 'development') {
 	app.use(morgan('dev'));
 }
 
 //File uploader
-
 app.use(fileupload());
 
-// Set static (logotype) folder
+// Set static (for logotypes) folder
 app.use(express.static(path.join(__dirname, 'public')));
 
 // USING ROUTES
-
 // Förvaltare
 app.use('/api/v1/forvaltare', forvaltare);
 // Föreningar
