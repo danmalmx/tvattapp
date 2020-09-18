@@ -27,10 +27,7 @@ exports.registrera = asyncHandler(
 			password,
 		});
 
-		//Create JWT
-		const token = anvandare.getJWTToken();
-
-		res.status(200).json({ success: true, token });
+		sendTokenResponse(anvandare, 200, res);
 	}
 );
 
@@ -78,8 +75,30 @@ exports.login = asyncHandler(async (req, res, next) => {
 		);
 	}
 
-	//Create JWT
+	sendTokenResponse(anvandare, 200, res);
+});
+
+//Get token from model, crrate cookie, send response
+const sendTokenResponse = (anvandare, statusCode, res) => {
 	const token = anvandare.getJWTToken();
 
-	res.status(200).json({ success: true, token });
-});
+	const options = {
+		expires: new Date(
+			Date.now() +
+				process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+		),
+		httpOnly: true,
+	};
+
+	if (process.env.NODE_ENV === 'production') {
+		options.secure = true;
+	}
+
+	res
+		.status(statusCode)
+		.cookie('token', token, options)
+		.json({
+			success: true,
+			token,
+		});
+};
