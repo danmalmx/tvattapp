@@ -24,6 +24,7 @@ exports.getForvaltare = asyncHandler(
 			success: true,
 			data: forvaltare,
 		});
+		console.log(req.headers);
 	}
 );
 

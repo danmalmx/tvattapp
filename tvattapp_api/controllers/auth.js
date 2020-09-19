@@ -102,3 +102,18 @@ const sendTokenResponse = (anvandare, statusCode, res) => {
 			token,
 		});
 };
+
+// BESKRIVNING:     Se nuarande inloggade användare
+// ROUTE:           POST /api/v1/auth/me
+// TILLGÅNG:        Begränsat (måst vara inloggad)
+
+exports.getMe = asyncHandler(async (req, res, next) => {
+	const anvandare = await Anvandare.findById(
+		req.anvandare.id
+	);
+
+	res.status(200).json({
+		success: true,
+		data: anvandare,
+	});
+});
