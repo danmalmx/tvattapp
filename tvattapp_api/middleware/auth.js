@@ -46,3 +46,19 @@ exports.protect = asyncHandler(async (req, res, next) => {
 		);
 	}
 });
+
+//Grant access to different roles
+
+exports.authorize = (...roles) => {
+	return (req, res, next) => {
+		if (!roles.includes(req.anvandare.role)) {
+			return next(
+				new ErrorResponse(
+					`Användre med rollen ${req.anvandare.role} har inte behörighet till denna route`,
+					403
+				)
+			);
+		}
+		next();
+	};
+};

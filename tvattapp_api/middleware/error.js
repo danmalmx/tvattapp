@@ -29,7 +29,9 @@ const errorHandler = (err, req, res, next) => {
 				: err.keyValue.website
 				? `websidan: ${err.keyValue.website}`
 				: err.keyValue.email
-				? `emailen: ${err.keyValue.email}`
+				? `emailen: ${err.keyValue.userName}`
+				: err.keyValue.email
+				? `emailen: ${err.keyValue.userName}`
 				: ''
 		}`;
 		error = new ErrorResponse(message, 400);

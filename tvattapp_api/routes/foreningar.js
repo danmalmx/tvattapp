@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 
-const { protect } = require('../middleware/auth');
+const {
+	protect,
+	authorize,
+} = require('../middleware/auth');
 
 // Importera routes och logik
 
@@ -22,12 +25,24 @@ router
 router
 	.route('/')
 	.get(getForeningar)
-	.post(protect, createForeningar);
+	.post(
+		protect,
+		authorize('SYSTEM_ADMIN', 'ADMIN'),
+		createForeningar
+	);
 
 router
 	.route('/:id')
 	.get(getForening)
-	.put(protect, updateForeningar)
-	.delete(protect, deleteForeningar);
+	.put(
+		protect,
+		authorize('SYSTEM_ADMIN', 'ADMIN'),
+		updateForeningar
+	)
+	.delete(
+		protect,
+		authorize('SYSTEM_ADMIN', 'ADMIN'),
+		deleteForeningar
+	);
 
 module.exports = router;
