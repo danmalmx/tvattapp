@@ -64,11 +64,11 @@ const AnvandareSchema = new mongoose.Schema(
 			// 	'Lägenhetsnummer är obligatorisk - står på överkanten av ytterdörren',
 			// ],
 		},
-		// foreningar: {
-		// 	type: mongoose.Schema.ObjectId,
-		// 	ref: 'Foreningar',
-		// 	required: true,
-		// },
+		anvandare: {
+			type: mongoose.Schema.ObjectId,
+			ref: 'Anvandare',
+			required: true,
+		},
 	},
 	{ timestamps: true }
 );

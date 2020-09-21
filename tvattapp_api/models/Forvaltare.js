@@ -29,6 +29,11 @@ const ForvaltareSchema = new mongoose.Schema(
 			trim: true,
 			required: [true, 'Websida är obligatorisk'],
 		},
+		anvandare: {
+			type: mongoose.Schema.ObjectId,
+			ref: 'Anvandare',
+			required: true,
+		},
 		createdAt: {
 			type: Date,
 			default: Date.now,
