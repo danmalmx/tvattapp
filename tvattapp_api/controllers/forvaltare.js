@@ -62,6 +62,7 @@ exports.createForvaltare = asyncHandler(
 	async (req, res, next) => {
 		//Add user to req.body
 		req.body.anvandare = req.anvandare.id;
+
 		const forvaltare = await Forvaltare.create(req.body);
 
 		res.status(201).json({

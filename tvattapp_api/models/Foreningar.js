@@ -74,6 +74,11 @@ const ForeningarSchema = new mongoose.Schema(
 			ref: 'Forvaltare',
 			required: true,
 		},
+		anvandare: {
+			type: mongoose.Schema.ObjectId,
+			ref: 'Anvandare',
+			required: true,
+		},
 	},
 	{
 		toJSON: { virtuals: true },

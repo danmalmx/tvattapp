@@ -80,6 +80,9 @@ exports.createForeningar = asyncHandler(
 			);
 		}
 
+		//Add user to req.body
+		req.body.anvandare = req.anvandare.id;
+
 		const foreningar = await Foreningar.create(req.body);
 
 		res.status(200).json({
