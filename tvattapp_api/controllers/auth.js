@@ -95,6 +95,65 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 	});
 });
 
+// BESKRIVNING:     Uppdatera användardetaljer
+// ROUTE:           PUT /api/v1/auth/updatedetails
+// TILLGÅNG:        Begränsat (måst vara inloggad)
+
+exports.updateDetails = asyncHandler(
+	async (req, res, next) => {
+		const fieldsToUpdate = {
+			email: req.body.email,
+			firstName: req.body.firstName,
+		};
+
+		const anvandare = await Anvandare.findByIdAndUpdate(
+			req.anvandare.id,
+			fieldsToUpdate,
+			{
+				new: true,
+				runValidators: true,
+			}
+		);
+
+		res.status(200).json({
+			success: true,
+			data: anvandare,
+		});
+	}
+);
+
+// BESKRIVNING:     Uppdatera lösenord
+// ROUTE:           PUT /api/v1/auth/updatepassword
+// TILLGÅNG:        Begränsat (måst vara inloggad)
+
+exports.uppdatePassword = asyncHandler(
+	async (req, res, next) => {
+		const anvandare = await Anvandare.findById(
+			req.anvandare.id
+		).select('+password');
+
+		//Check current password
+		if (
+			!(await anvandare.matchPassword(
+				req.body.currentPassword
+			))
+		) {
+			return next(
+				new ErrorResponse('Lösenordet är inkorrekt', 401)
+			);
+		}
+		anvandare.password = req.body.newPassword;
+
+		await anvandare.save();
+
+		sendTokenResponse(anvandare, 200, res);
+
+		res.status(200).json({
+			success: true,
+			data: anvandare,
+		});
+	}
+);
 // BESKRIVNING:     Glömt lösenord
 // ROUTE:           POST /api/v1/auth/forgotpassword
 // TILLGÅNG:        Begränsat (måst vara inloggad)

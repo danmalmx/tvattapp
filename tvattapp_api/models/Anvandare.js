@@ -9,10 +9,12 @@ const AnvandareSchema = new mongoose.Schema(
 		firstName: {
 			type: String,
 			required: [true, 'Förnamn är obliatoriskt'],
+			trim: true,
 		},
 		lastName: {
 			type: String,
 			required: [true, 'Efternamn är obliatoriskt'],
+			trim: true,
 		},
 		email: {
 			type: String,
