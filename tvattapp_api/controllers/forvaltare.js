@@ -9,12 +9,6 @@ const Forvaltare = require('../models/Forvaltare');
 
 exports.getForvaltare = asyncHandler(
 	async (req, res, next) => {
-		// let query;
-
-		// let queryStr = JSON.stringify(req.query);
-
-		// query = Forvaltare.find(JSON.params(queryStr));
-
 		const forvaltare = await Forvaltare.find().populate({
 			path: 'foreningar',
 			select: 'name',

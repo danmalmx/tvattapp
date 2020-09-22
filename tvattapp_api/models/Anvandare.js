@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const slugify = require('slugify');
 
 const AnvandareSchema = new mongoose.Schema(
@@ -75,6 +76,9 @@ const AnvandareSchema = new mongoose.Schema(
 
 //Encrypt password (bcryptjs library)
 AnvandareSchema.pre('save', async function (next) {
+	if (!this.isModified('password')) {
+		next();
+	}
 	const salt = await bcrypt.genSalt(10);
 	this.password = await bcrypt.hash(this.password, salt);
 });
@@ -95,6 +99,23 @@ AnvandareSchema.methods.matchPassword = async function (
 	userPassword
 ) {
 	return await bcrypt.compare(userPassword, this.password);
+};
+
+//Generate and hash password token
+AnvandareSchema.methods.resetPasswordToken = function () {
+	//Geretate token
+	const resetToken = crypto.randomBytes(20).toString('hex');
+
+	//Hash token, set to resetPasswordToken field
+	this.resetPasswordToken = crypto
+		.createHash('sha256')
+		.update(resetToken)
+		.digest('hex');
+
+	// Set expire
+	this.passwordExpires = Date.now() + 10 * 60 * 1000;
+
+	return resetToken;
 };
 
 module.exports = mongoose.model(

@@ -12,7 +12,6 @@ exports.protect = asyncHandler(async (req, res, next) => {
 		req.headers.authorization.startsWith('Bearer')
 	) {
 		token = req.headers.authorization.split(' ')[1];
-		console.log(`Token: ${token}`);
 	} else if (req.cookies.token) {
 		token = req.cookies.token;
 	}
@@ -32,7 +31,6 @@ exports.protect = asyncHandler(async (req, res, next) => {
 			token,
 			process.env.JWT_SECRET
 		);
-		console.log(`Decoded: ${decoded}`);
 
 		req.anvandare = await Anvandare.findById(decoded.id);
 
@@ -54,7 +52,7 @@ exports.authorize = (...roles) => {
 		if (!roles.includes(req.anvandare.role)) {
 			return next(
 				new ErrorResponse(
-					`Användre med rollen ${req.anvandare.role} har inte behörighet till denna route`,
+					`Användare med rollen ${req.anvandare.role} har inte behörighet till denna route`,
 					403
 				)
 			);

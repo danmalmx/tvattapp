@@ -65,6 +65,9 @@ exports.getForening = asyncHandler(
 
 exports.createForeningar = asyncHandler(
 	async (req, res, next) => {
+		//Add user to req.body
+		req.body.anvandare = req.anvandare.id;
+
 		req.body.forvaltare = req.params.forvaltareId;
 
 		const forvaltare = await Forvaltare.findById(
@@ -80,8 +83,20 @@ exports.createForeningar = asyncHandler(
 			);
 		}
 
-		//Add user to req.body
-		req.body.anvandare = req.anvandare.id;
+		// Make sure only SYSTEM_ADMIN can add förvaltare
+		if (
+			(forvaltare.anvandare.toString() !==
+				req.anvandare.id &&
+				req.anvandare.role !== 'SYSTEM_ADMIN') ||
+			req.anvandare.role !== 'ADMIN'
+		) {
+			return next(
+				new ErrorResponse(
+					`Användare ${req.anvandare.id} har inte behörighet att lägga till en förening`,
+					401
+				)
+			);
+		}
 
 		const foreningar = await Foreningar.create(req.body);
 
@@ -120,6 +135,22 @@ exports.updateForeningar = asyncHandler(
 			}
 		);
 
+		// Make sure only SYSTEM_ADMIN can update a förvaltare
+
+		if (
+			(foreningar.anvandare.toString() !==
+				req.anvandare.id &&
+				req.anvandare.role !== 'SYSTEM_ADMIN') ||
+			req.anvandare.role !== 'ADMIN'
+		) {
+			return next(
+				new ErrorResponse(
+					`Användare ${req.anvandare.id} har inte behörighet att uppdatera en förening`,
+					401
+				)
+			);
+		}
+
 		res.status(200).json({
 			success: true,
 			data: foreningar,
@@ -142,6 +173,22 @@ exports.deleteForeningar = asyncHandler(
 				new ErrorResponse(
 					`Hittar ingen förening med id ${req.params.id}`,
 					404
+				)
+			);
+		}
+
+		// Make sure only SYSTEM_ADMIN can delete a förvaltare
+
+		if (
+			(foreningar.anvandare.toString() !==
+				req.anvandare.id &&
+				req.anvandare.role !== 'SYSTEM_ADMIN') ||
+			req.anvandare.role !== 'ADMIN'
+		) {
+			return next(
+				new ErrorResponse(
+					`Användare ${req.anvandare.id} har inte behörighet att ta bort en förening`,
+					401
 				)
 			);
 		}

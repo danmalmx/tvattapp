@@ -78,6 +78,54 @@ exports.login = asyncHandler(async (req, res, next) => {
 	sendTokenResponse(anvandare, 200, res);
 });
 
+// BESKRIVNING:     Se nuarande inloggade användare
+// ROUTE:           POST /api/v1/auth/me
+// TILLGÅNG:        Begränsat (måst vara inloggad)
+
+exports.getMe = asyncHandler(async (req, res, next) => {
+	const anvandare = await Anvandare.findById(
+		req.anvandare.id
+	);
+
+	res.status(200).json({
+		success: true,
+		data: anvandare,
+	});
+});
+
+// BESKRIVNING:     Glömt lösenord
+// ROUTE:           POST /api/v1/auth/forgotpassword
+// TILLGÅNG:        Begränsat (måst vara inloggad)
+
+exports.forgotPassword = asyncHandler(
+	async (req, res, next) => {
+		const anvandare = await Anvandare.findOne({
+			email: req.body.email,
+		});
+
+		if (!anvandare) {
+			return next(
+				new ErrorResponse(
+					'Det finns ingen användare med det emailet',
+					404
+				)
+			);
+		}
+
+		//Get token for reset
+		const resetToken = anvandare.resetPasswordToken();
+
+		console.log(resetToken);
+
+		await anvandare.save({ validateBeforeSave: false });
+
+		res.status(200).json({
+			success: true,
+			data: anvandare,
+		});
+	}
+);
+
 //Get token from model, crrate cookie, send response
 const sendTokenResponse = (anvandare, statusCode, res) => {
 	const token = anvandare.getJWTToken();
@@ -102,18 +150,3 @@ const sendTokenResponse = (anvandare, statusCode, res) => {
 			token,
 		});
 };
-
-// BESKRIVNING:     Se nuarande inloggade användare
-// ROUTE:           POST /api/v1/auth/me
-// TILLGÅNG:        Begränsat (måst vara inloggad)
-
-exports.getMe = asyncHandler(async (req, res, next) => {
-	const anvandare = await Anvandare.findById(
-		req.anvandare.id
-	);
-
-	res.status(200).json({
-		success: true,
-		data: anvandare,
-	});
-});
