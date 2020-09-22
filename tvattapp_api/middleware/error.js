@@ -1,4 +1,4 @@
-const e = require('express');
+const express = require('express');
 const ErrorResponse = require('../utilities/errorResponse');
 
 const errorHandler = (err, req, res, next) => {
@@ -29,9 +29,9 @@ const errorHandler = (err, req, res, next) => {
 				: err.keyValue.website
 				? `websidan: ${err.keyValue.website}`
 				: err.keyValue.email
-				? `emailen: ${err.keyValue.userName}`
+				? `emailen: ${err.keyValue.email}`
 				: err.keyValue.email
-				? `emailen: ${err.keyValue.userName}`
+				? `användarnamnet: ${err.keyValue.userName}`
 				: ''
 		}`;
 		error = new ErrorResponse(message, 400);

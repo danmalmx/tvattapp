@@ -43,8 +43,6 @@ const AnvandareSchema = new mongoose.Schema(
 			minlength: 8,
 			select: false,
 		},
-		resetPassword: String,
-		passwordExpires: Date,
 
 		phone: {
 			type: String,
@@ -65,11 +63,8 @@ const AnvandareSchema = new mongoose.Schema(
 			// 	'Lägenhetsnummer är obligatorisk - står på överkanten av ytterdörren',
 			// ],
 		},
-		anvandare: {
-			type: mongoose.Schema.ObjectId,
-			ref: 'Anvandare',
-			required: true,
-		},
+		resetPassword: String,
+		passwordExpires: Date,
 	},
 	{ timestamps: true }
 );
@@ -106,8 +101,8 @@ AnvandareSchema.methods.resetPasswordToken = function () {
 	//Geretate token
 	const resetToken = crypto.randomBytes(20).toString('hex');
 
-	//Hash token, set to resetPasswordToken field
-	this.resetPasswordToken = crypto
+	//Hash token, set to resetPassword field
+	this.resetPassword = crypto
 		.createHash('sha256')
 		.update(resetToken)
 		.digest('hex');

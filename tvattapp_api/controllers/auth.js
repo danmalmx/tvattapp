@@ -1,6 +1,8 @@
 const ErrorResponse = require('../utilities/errorResponse');
 const asyncHandler = require('../middleware/async');
 const Anvandare = require('../models/Anvandare');
+const sendEmail = require('../utilities/sendEmai');
+const crypto = require('crypto');
 
 // BESKRIVNING:     Skapa användare
 // ROUTE:           POST /api/v1/auth/registrera
@@ -115,9 +117,36 @@ exports.forgotPassword = asyncHandler(
 		//Get token for reset
 		const resetToken = anvandare.resetPasswordToken();
 
-		console.log(resetToken);
-
 		await anvandare.save({ validateBeforeSave: false });
+
+		//Create reset URL
+		const resetUrl = `${req.protocol}://${req.get(
+			'host'
+		)}/api/v1/auth/resetpassword/${resetToken}`;
+
+		const message = `Du får detta email på grund av att du (eller någon annan) har begärt att återställa lösenordet. Var vänlig och gör en PUT förfrågning till: \n\n ${resetUrl}`;
+
+		try {
+			await sendEmail({
+				email: anvandare.email,
+				subject: 'Token för att återställ lösenord',
+				message,
+			});
+
+			res.status(200).json({
+				success: true,
+				data: 'Email skickat',
+			});
+		} catch (error) {
+			anvandare.resetPassword = undefined;
+			anvandare.passwordExpires = undefined;
+
+			await anvandare.save({ validateBeforeSave: false });
+
+			return next(
+				new ErrorResponse('Kunde inte skicka email', 500)
+			);
+		}
 
 		res.status(200).json({
 			success: true,
@@ -126,7 +155,43 @@ exports.forgotPassword = asyncHandler(
 	}
 );
 
-//Get token from model, crrate cookie, send response
+// BESKRIVNING:     Återställ lösenord
+// ROUTE:           PUT /api/v1/auth/resetpassword/:resettoken
+// TILLGÅNG:        Obegränsad
+
+exports.resetPassword = asyncHandler(
+	async (req, res, next) => {
+		//Get hashed token
+		const resetPassword = crypto
+			.createHash('sha256')
+			.update(req.params.resettoken)
+			.digest('hex');
+
+		console.log(req.params.resettoken);
+
+		const anvandare = await Anvandare.findOne({
+			resetPassword: resetPassword,
+			passwordExpires: { $gt: Date.now() },
+		});
+
+		console.log(`Användare: ${anvandare}`);
+
+		if (!anvandare) {
+			return next(new ErrorResponse('Ogiltig token', 400));
+		}
+
+		//Set new password
+		anvandare.password = req.body.password;
+		anvandare.resetPassword = undefined;
+		anvandare.passwordExpires = undefined;
+
+		await anvandare.save();
+
+		sendTokenResponse(anvandare, 200, res);
+	}
+);
+
+//Get token from model, create cookie, send response
 const sendTokenResponse = (anvandare, statusCode, res) => {
 	const token = anvandare.getJWTToken();
 
