@@ -14,7 +14,7 @@ const errorHandler = (err, req, res, next) => {
 	console.log(err.name);
 
 	if (err.name === 'CastError') {
-		const message = `Hittade ingen förvaltare med id ${err.value}`;
+		const message = `Hittade ingen resurs`;
 		error = new ErrorResponse(message, 404);
 	}
 
