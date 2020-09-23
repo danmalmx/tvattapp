@@ -85,10 +85,10 @@ exports.createForeningar = asyncHandler(
 
 		// Make sure only SYSTEM_ADMIN can add förvaltare
 		if (
-			(forvaltare.anvandare.toString() !==
+			forvaltare.anvandare.toString() !==
 				req.anvandare.id &&
-				req.anvandare.role !== 'SYSTEM_ADMIN') ||
-			req.anvandare.role !== 'ADMIN'
+			(req.anvandare.role !== 'SYSTEM_ADMIN' ||
+				req.anvandare.role !== 'ADMIN')
 		) {
 			return next(
 				new ErrorResponse(

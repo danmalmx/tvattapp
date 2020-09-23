@@ -80,6 +80,21 @@ exports.login = asyncHandler(async (req, res, next) => {
 	sendTokenResponse(anvandare, 200, res);
 });
 
+// BESKRIVNING:     Logga ut anvandare / rensa cookie
+// ROUTE:           GET /api/v1/auth/logout
+// TILLGÅNG:        Begränsat (måst vara inloggad)
+
+exports.logout = asyncHandler(async (req, res, next) => {
+	res.cookie('token', 'none', {
+		expires: new Date(Date.now() + 10 * 1000),
+		httpOnly: true,
+	});
+	res.status(200).json({
+		success: true,
+		data: {},
+	});
+});
+
 // BESKRIVNING:     Se nuarande inloggade användare
 // ROUTE:           POST /api/v1/auth/me
 // TILLGÅNG:        Begränsat (måst vara inloggad)
@@ -126,7 +141,7 @@ exports.updateDetails = asyncHandler(
 // ROUTE:           PUT /api/v1/auth/updatepassword
 // TILLGÅNG:        Begränsat (måst vara inloggad)
 
-exports.uppdatePassword = asyncHandler(
+exports.updatePassword = asyncHandler(
 	async (req, res, next) => {
 		const anvandare = await Anvandare.findById(
 			req.anvandare.id

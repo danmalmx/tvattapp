@@ -26,7 +26,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
 		);
 	}
 	try {
-		//Verify toke
+		//Verify token
 		const decoded = jwt.verify(
 			token,
 			process.env.JWT_SECRET
