@@ -19,6 +19,7 @@ connectDB();
 const foreningar = require('./routes/foreningar');
 const forvaltare = require('./routes/forvaltare');
 const auth = require('./routes/auth');
+const anvandare = require('./routes/anvandare');
 // const tvattstuga = require('./routes/tvattstuga');
 
 //Initialte express
@@ -46,8 +47,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1/forvaltare', forvaltare);
 // Föreningar
 app.use('/api/v1/foreningar', foreningar);
-// Registrera användare
+// Registrera atoriserade användare
 app.use('/api/v1/auth', auth);
+//CRUD för användare
+app.use('/api/v1/anvandare', anvandare);
 
 //Infuse error handling middlewarr
 app.use(errorHandler);
