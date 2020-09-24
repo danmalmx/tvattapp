@@ -9,12 +9,6 @@ const Forvaltare = require('../models/Forvaltare');
 
 exports.getForvaltare = asyncHandler(
 	async (req, res, next) => {
-		// let query;
-
-		// let queryStr = JSON.stringify(req.query);
-
-		// query = Forvaltare.find(JSON.params(queryStr));
-
 		const forvaltare = await Forvaltare.find().populate({
 			path: 'foreningar',
 			select: 'name',
@@ -24,6 +18,7 @@ exports.getForvaltare = asyncHandler(
 			success: true,
 			data: forvaltare,
 		});
+		console.log(req.headers);
 	}
 );
 
@@ -59,6 +54,9 @@ exports.getEnForvaltare = asyncHandler(
 
 exports.createForvaltare = asyncHandler(
 	async (req, res, next) => {
+		//Add user to req.body
+		req.body.anvandare = req.anvandare.id;
+
 		const forvaltare = await Forvaltare.create(req.body);
 
 		res.status(201).json({

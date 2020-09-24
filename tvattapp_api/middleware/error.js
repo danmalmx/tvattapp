@@ -1,4 +1,4 @@
-const e = require('express');
+const express = require('express');
 const ErrorResponse = require('../utilities/errorResponse');
 
 const errorHandler = (err, req, res, next) => {
@@ -14,7 +14,7 @@ const errorHandler = (err, req, res, next) => {
 	console.log(err.name);
 
 	if (err.name === 'CastError') {
-		const message = `Hittade ingen förvaltare med id ${err.value}`;
+		const message = `Hittade ingen resurs`;
 		error = new ErrorResponse(message, 404);
 	}
 
@@ -30,6 +30,8 @@ const errorHandler = (err, req, res, next) => {
 				? `websidan: ${err.keyValue.website}`
 				: err.keyValue.email
 				? `emailen: ${err.keyValue.email}`
+				: err.keyValue.email
+				? `användarnamnet: ${err.keyValue.userName}`
 				: ''
 		}`;
 		error = new ErrorResponse(message, 400);

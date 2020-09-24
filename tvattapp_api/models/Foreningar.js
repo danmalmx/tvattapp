@@ -47,10 +47,6 @@ const ForeningarSchema = new mongoose.Schema(
 			required: [true, 'Land är obligatorisk'],
 			default: 'Sverige',
 		},
-		createdAt: {
-			type: Date,
-			default: Date.now,
-		},
 		location: {
 			//GeoJSON Point
 			type: {
@@ -74,7 +70,14 @@ const ForeningarSchema = new mongoose.Schema(
 			ref: 'Forvaltare',
 			required: true,
 		},
+		anvandare: {
+			type: mongoose.Schema.ObjectId,
+			ref: 'Anvandare',
+			required: true,
+		},
 	},
+	{ timestamps: true },
+
 	{
 		toJSON: { virtuals: true },
 		toObject: { virtuals: true },

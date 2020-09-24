@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 
+const {
+	protect,
+	authorize,
+} = require('../middleware/auth');
+
 // Importera routes och logik
 
 const {
@@ -17,12 +22,27 @@ router
 	.route('/radius/:zipcode/:distance')
 	.get(getForeningInRadius);
 
-router.route('/').get(getForeningar).post(createForeningar);
+router
+	.route('/')
+	.get(getForeningar)
+	.post(
+		protect,
+		authorize('SYSTEM_ADMIN', 'ADMIN'),
+		createForeningar
+	);
 
 router
 	.route('/:id')
 	.get(getForening)
-	.put(updateForeningar)
-	.delete(deleteForeningar);
+	.put(
+		protect,
+		authorize('SYSTEM_ADMIN', 'ADMIN'),
+		updateForeningar
+	)
+	.delete(
+		protect,
+		authorize('SYSTEM_ADMIN', 'ADMIN'),
+		deleteForeningar
+	);
 
 module.exports = router;

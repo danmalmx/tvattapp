@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const slugify = require('slugify');
 
 const AnvandareSchema = new mongoose.Schema(
@@ -8,10 +9,12 @@ const AnvandareSchema = new mongoose.Schema(
 		firstName: {
 			type: String,
 			required: [true, 'Förnamn är obliatoriskt'],
+			trim: true,
 		},
 		lastName: {
 			type: String,
 			required: [true, 'Efternamn är obliatoriskt'],
+			trim: true,
 		},
 		email: {
 			type: String,
@@ -42,8 +45,6 @@ const AnvandareSchema = new mongoose.Schema(
 			minlength: 8,
 			select: false,
 		},
-		resetPassword: String,
-		passwordExpires: Date,
 
 		phone: {
 			type: String,
@@ -64,17 +65,17 @@ const AnvandareSchema = new mongoose.Schema(
 			// 	'Lägenhetsnummer är obligatorisk - står på överkanten av ytterdörren',
 			// ],
 		},
-		// foreningar: {
-		// 	type: mongoose.Schema.ObjectId,
-		// 	ref: 'Foreningar',
-		// 	required: true,
-		// },
+		resetPassword: String,
+		passwordExpires: Date,
 	},
 	{ timestamps: true }
 );
 
 //Encrypt password (bcryptjs library)
 AnvandareSchema.pre('save', async function (next) {
+	if (!this.isModified('password')) {
+		next();
+	}
 	const salt = await bcrypt.genSalt(10);
 	this.password = await bcrypt.hash(this.password, salt);
 });
@@ -95,6 +96,23 @@ AnvandareSchema.methods.matchPassword = async function (
 	userPassword
 ) {
 	return await bcrypt.compare(userPassword, this.password);
+};
+
+//Generate and hash password token
+AnvandareSchema.methods.resetPasswordToken = function () {
+	//Geretate token
+	const resetToken = crypto.randomBytes(20).toString('hex');
+
+	//Hash token, set to resetPassword field
+	this.resetPassword = crypto
+		.createHash('sha256')
+		.update(resetToken)
+		.digest('hex');
+
+	// Set expire
+	this.passwordExpires = Date.now() + 10 * 60 * 1000;
+
+	return resetToken;
 };
 
 module.exports = mongoose.model(

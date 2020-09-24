@@ -5,7 +5,12 @@ const morgan = require('morgan');
 const colors = require('colors');
 const fileupload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
-
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const hpp = require('hpp');
+const xss = require('xss-clean');
+const cors = require('cors');
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 
@@ -19,6 +24,7 @@ connectDB();
 const foreningar = require('./routes/foreningar');
 const forvaltare = require('./routes/forvaltare');
 const auth = require('./routes/auth');
+const anvandare = require('./routes/anvandare');
 // const tvattstuga = require('./routes/tvattstuga');
 
 //Initialte express
@@ -41,15 +47,41 @@ app.use(fileupload());
 // Set static (for logotypes) folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Sanitize data
+app.use(mongoSanitize());
+
+//Set security headers
+app.use(helmet());
+
+//Prevent XSS attacks
+app.use(xss());
+
+//Rate limiting
+
+const limiter = rateLimit({
+	windowMs: 10 * 60 * 1000, // 10 min
+	max: 100,
+});
+
+app.use(limiter);
+
+//Prevent HTTPP param polution
+app.use(hpp());
+
+//Enable CORS
+app.use(cors());
+
 // USING ROUTES
 // Förvaltare
 app.use('/api/v1/forvaltare', forvaltare);
 // Föreningar
 app.use('/api/v1/foreningar', foreningar);
-// Registrera användare
+// Registrera atoriserade användare
 app.use('/api/v1/auth', auth);
+//CRUD för användare
+app.use('/api/v1/anvandare', anvandare);
 
-//Infuse error handling middlewarr
+//Infuse error handling middleware
 app.use(errorHandler);
 
 //Assign port - conditional on dev or prod

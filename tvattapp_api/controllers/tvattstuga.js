@@ -4,7 +4,67 @@ const geocoder = require('../utilities/geocoder');
 const Foreningar = require('../models/Foreningar');
 const Forvaltare = require('../models/Forvaltare');
 
-// BESKRIVNING:     Hämtar alla föreningar
+// BESKRIVNING:     Hämtar alla tvättstugor
+// ROUTE 1:         GET /api/v1/foreningar/
+// ROUTE 2:         GET /api/v1/forvaltare/:forvaltareId/foreningar
+// TILLGÅNG:        Obegränsad
+
+exports.getForeningar = asyncHandler(
+	async (req, res, next) => {
+		let query;
+
+		if (req.params.forvaltareId) {
+			query = Foreningar.find({
+				forvaltare: req.params.forvaltareId,
+			});
+		} else {
+			query = Foreningar.find().populate({
+				path: 'forvaltare',
+				select: 'name',
+			});
+		}
+
+		const foreningar = await query;
+
+		res.status(200).json({
+			success: true,
+			count: foreningar.length,
+			data: foreningar,
+		});
+	}
+);
+
+// BESKRIVNING:     Hämtar alla tvättstugor i en förening
+// ROUTE 1:         GET /api/v1/foreningar/
+// ROUTE 2:         GET /api/v1/forvaltare/:forvaltareId/foreningar
+// TILLGÅNG:        Obegränsad
+
+exports.getForeningar = asyncHandler(
+	async (req, res, next) => {
+		let query;
+
+		if (req.params.forvaltareId) {
+			query = Foreningar.find({
+				forvaltare: req.params.forvaltareId,
+			});
+		} else {
+			query = Foreningar.find().populate({
+				path: 'forvaltare',
+				select: 'name',
+			});
+		}
+
+		const foreningar = await query;
+
+		res.status(200).json({
+			success: true,
+			count: foreningar.length,
+			data: foreningar,
+		});
+	}
+);
+
+// BESKRIVNING:     Hämtar alla användare av en tvättstuga
 // ROUTE 1:         GET /api/v1/foreningar/
 // ROUTE 2:         GET /api/v1/forvaltare/:forvaltareId/foreningar
 // TILLGÅNG:        Obegränsad

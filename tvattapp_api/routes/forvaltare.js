@@ -1,5 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const {
+	protect,
+	authorize,
+} = require('../middleware/auth');
 
 // Importera routes och logik
 const {
@@ -19,14 +23,31 @@ router.use('/:forvaltareId/foreningar', foreningRouter);
 
 // Tildela routes HTTP
 
-router.route('/').get(getForvaltare).post(createForvaltare);
+router
+	.route('/')
+	.get(getForvaltare)
+	.post(
+		protect,
+		authorize('SYSTEM_ADMIN'),
+		createForvaltare
+	);
 
 router
 	.route('/:id')
 	.get(getEnForvaltare)
-	.put(updateForvaltare)
-	.delete(deleteForvaltare);
+	.put(protect, authorize('SYSTEM_ADMIN'), updateForvaltare)
+	.delete(
+		protect,
+		authorize('SYSTEM_ADMIN'),
+		deleteForvaltare
+	);
 
-router.route('/:id/photo').put(forvaltareLogoUpload);
+router
+	.route('/:id/photo')
+	.put(
+		protect,
+		authorize('SYSTEM_ADMIN'),
+		forvaltareLogoUpload
+	);
 
 module.exports = router;
