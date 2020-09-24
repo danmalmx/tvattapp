@@ -14,7 +14,8 @@
 	"keywords": [
 		"node",
 		"react",
-		"mongoDB"
+		"mongoDB",
+		"express"
 	],
 	"author": "Albert Stjärne, Daniel Malmgren de Oliveira",
 	"license": "ISC",
