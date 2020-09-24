@@ -34,11 +34,9 @@ const ForvaltareSchema = new mongoose.Schema(
 			ref: 'Anvandare',
 			required: true,
 		},
-		createdAt: {
-			type: Date,
-			default: Date.now,
-		},
 	},
+	{ timestamps: true },
+
 	{
 		toJSON: { virtuals: true },
 		toObject: { virtuals: true },
